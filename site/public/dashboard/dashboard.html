@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboards.css">
+    <link rel="stylesheet" href="../styles/style_Gráficos.css">
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
 
@@ -27,12 +28,12 @@
 
 <!-- <body onload=" atualizarFeed()"> -->
 
-<body>
+<body onload="listarPlantacoes()">
 
     <div class="janela">
         <div class="header-left">
             <img src="../assets/logo.jpeg" width="135px" alt="Logo StrawTech">
-            
+
 
             <div class="hello">
                 <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
@@ -60,12 +61,107 @@
         <div class="dash">
             <div id="alerta">
             </div>
+            <br><br><br>
+            <div style="margin: auto; text-align: center">
+                <h1 style="color: black;">Seleciona uma plantação:</h1>
+                <select name="plantacoes" id="listaplatacoesUser">
+                    <option selected>Selecione uma plantação</option>
+                </select>
+                <button onclick="ChamarGraphc()" class="btn-buscarPlantacao">Buscar Plantação</button>
+            </div>
+            <br><br><br>
+            <div class="graficossss">
+                <center>
+                    <h3>Média temperaturas ideais:</h3>
+                </center>
+
+                <br>
+
+                <div class="h3Graficos">
+                    <h3 style="color: rgb(223, 34, 34);">Temperatura</h3> <img class="imgVetorTemperatura"
+                        src="../assets/VetorTemperaturaPNG.png" alt="">
+                </div>
+                <div class="regua">
+                    <div class="item-regua perigo-frio">
+                        <h4>Perigo</h4>
+                        <h2>&lt;=5°C</h2>
+                    </div>
+                    <div class="item-regua alerta-frio">
+                        <h4>Alerta</h4>
+                        <h2>&lt;=10°C</h2>
+                    </div>
+                    <div class="item-regua ideal">
+                        <h4>Ideal</h4>
+                        <h2>20°C</h2>
+                    </div>
+                    <div class="item-regua alerta-quente">
+                        <h4>Alerta</h4>
+                        <h2>&gt;=22°C</h2>
+                    </div>
+                    <div class="item-regua perigo-quente">
+                        <h4>Perigo</h4>
+                        <h2>&gt;=23°C</h2>
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="h3Graficos">
+                    <h3 style="color: rgb(0, 140, 255);">Umidade</h3> <img class="imgVetorUmidade"
+                        src="../assets/umidadeVetor.png" alt="">
+                </div>
+                <div class="regua">
+                    <div class="item-regua perigo-frio">
+                        <h4>Perigo</h4>
+                        <h2>&lt;=5°C</h2>
+                    </div>
+                    <div class="item-regua alerta-frio">
+                        <h4>Alerta</h4>
+                        <h2>&lt;=10°C</h2>
+                    </div>
+                    <div class="item-regua ideal">
+                        <h4>Ideal</h4>
+                        <h2>20°C</h2>
+                    </div>
+                    <div class="item-regua alerta-quente">
+                        <h4>Alerta</h4>
+                        <h2>&gt;=22°C</h2>
+                    </div>
+                    <div class="item-regua perigo-quente">
+                        <h4>Perigo</h4>
+                        <h2>&gt;=23°C</h2>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="DivDashBoardCard">
+                <br>
+                <h3>Média Diária</h3>
+                <br>
+
+                <div class="FlexBox alintExCenter">
+                    <div class="Card-MédiaMensalUmi">
+                        <p style="color: #45b3e7; font-size: 20px">Umidade %</p>
+                        <p id="NumeroCardDiáriaUmi" class="NumberCardMensalUmi">0</p>
+                    </div>
+
+                    <div class="Card-MédiaMensalTemp">
+                        <p style="color: #ff7301; font-size: 20px">Temperatura C°</p>
+                        <p id="NumeroCardDiáriaTemp" class="NumberCardMensalTemp">0</p>
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+
 
             <div class="btns-dash" id="btnAquario">
                 <!-- O gráfico é chamado de acordo com o id (fk_aquario) do banco  -->
             </div>
             <div id="graficos">
             </div>
+
+
         </div>
     </div>
 
@@ -77,38 +173,112 @@
 <script>
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
-    let proximaAtualizacao;
+    function listarPlantacoes() {
 
-    window.onload = exibirAquariosDoUsuario();
+        var idplantacao = sessionStorage.ID_USUARIO;
 
-    function exibirAquariosDoUsuario() {
-        var aquarios = JSON.parse(sessionStorage.AQUARIOS);
-        aquarios.forEach(item => {
-            document.getElementById("btnAquario").innerHTML += `
-            <button class="btn-chart" onclick="exibirAquario(${item.id})" id="btnAquario${item.id}">${item.descricao}</button>
-            `
+        fetch(`/empresas/listar/${idplantacao}`, {
+            method: "GET",
+        })
+            .then(function (resposta) {
+                resposta.json().then((plantacao) => {
+                    plantacao.forEach((plantacao) => {
+                        listaplatacoesUser.innerHTML += `<option value='${plantacao.idPlantacao}'>${plantacao.nome}</option>`;
+                    });
+                });
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
 
+        console.log(sessionStorage.ID_USUARIO);
+    }
+
+
+    function ChamarGraphc() {
+
+        var plantacoes = JSON.parse(sessionStorage.PLANTACOES);
+        plantacoes.forEach(item => {
             document.getElementById("graficos").innerHTML += `
-                <div id="grafico${item.id}" class="display-none">
+                <div id="grafico${item.idPlantacao}" class="display-none">
                     <h3 class="tituloGraficos">
-                        <span id="tituloAquario${item.id}">${item.descricao}</span>
+                        <span id="tituloAquario${item.idPlantacao}">${item.nome}</span>
                     </h3>
                     <div class="graph">
-                        <canvas id="myChartCanvas${item.id}"></canvas>
+                        <canvas id="myChartCanvas${item.idPlantacao}"></canvas>
                     </div>
                     <div class="label-captura">
-                        <p id="avisoCaptura${item.id}" style="color: white"></p>
+                        <p id="avisoCaptura${item.idPlantacao}" style="color: white"></p>
                     </div>
                 </div>
             `
-
-            obterDadosGrafico(item.id)
-        });
-
-        if (aquarios.length > 0) {
-            exibirAquario(aquarios[0].id)
-        }
+        })
+        BuscarPlantacao()
     }
+
+
+
+
+    function BuscarPlantacao() {
+
+        var plantacaoASerbuscada = listaplatacoesUser.value
+
+        fetch(`/medidas/ultimas/${plantacaoASerbuscada}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+
+                    plotarGrafico(resposta, plantacaoASerbuscada);
+
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+
+
+
+
+    }
+
+    let proximaAtualizacao;
+
+    // window.onload = exibirAquariosDoUsuario();
+
+    // function exibirAquariosDoUsuario() {
+    //     var aquarios = JSON.parse(sessionStorage.AQUARIOS);
+    //     aquarios.forEach(item => {
+    //         document.getElementById("btnAquario").innerHTML += `
+    //         <button class="btn-chart" onclick="exibirAquario(${item.id})" id="btnAquario${item.id}">${item.descricao}</button>
+    //         `
+
+    //         document.getElementById("graficos").innerHTML += `
+    //             <div id="grafico${item.id}" class="display-none">
+    //                 <h3 class="tituloGraficos">
+    //                     <span id="tituloAquario${item.id}">${item.descricao}</span>
+    //                 </h3>
+    //                 <div class="graph">
+    //                     <canvas id="myChartCanvas${item.id}"></canvas>
+    //                 </div>
+    //                 <div class="label-captura">
+    //                     <p id="avisoCaptura${item.id}" style="color: white"></p>
+    //                 </div>
+    //             </div>
+    //         `
+
+    //         obterDadosGrafico(item.id)
+    //     });
+
+    //     if (aquarios.length > 0) {
+    //         exibirAquario(aquarios[0].id)
+    //     }
+    // }
 
     function alterarTitulo(idAquario) {
         var tituloAquario = document.getElementById(`tituloAquario${idAquario}`)
@@ -159,31 +329,31 @@
 
     //     Se quiser alterar a busca, ajuste as regras de negócio em src/controllers
     //     Para ajustar o "select", ajuste o comando sql em src/models
-    function obterDadosGrafico(idAquario) {
+    // function obterDadosGrafico(idAquario) {
 
-        alterarTitulo(idAquario)
+    //     alterarTitulo(idAquario)
 
-        if (proximaAtualizacao != undefined) {
-            clearTimeout(proximaAtualizacao);
-        }
+    //     if (proximaAtualizacao != undefined) {
+    //         clearTimeout(proximaAtualizacao);
+    //     }
 
-        fetch(`/medidas/ultimas/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                    resposta.reverse();
+    //     fetch(`/medidas/ultimas/${idAquario}`, { cache: 'no-store' }).then(function (response) {
+    //         if (response.ok) {
+    //             response.json().then(function (resposta) {
+    //                 console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+    //                 resposta.reverse();
 
-                    plotarGrafico(resposta, idAquario);
+    //                 plotarGrafico(resposta, idAquario);
 
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-    }
+    //             });
+    //         } else {
+    //             console.error('Nenhum dado encontrado ou erro na API');
+    //         }
+    //     })
+    //         .catch(function (error) {
+    //             console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+    //         });
+    // }
 
     // Esta função *plotarGrafico* usa os dados capturados na função anterior para criar o gráfico
     // Configura o gráfico (cores, tipo, etc), materializa-o na página e, 
@@ -250,6 +420,7 @@
     }
 
 
+
     // Esta função *atualizarGrafico* atualiza o gráfico que foi renderizado na página,
     // buscando a última medida inserida em tabela contendo as capturas, 
 
@@ -262,6 +433,16 @@
         fetch(`/medidas/tempo-real/${idAquario}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (novoRegistro) {
+
+
+                    var ValorTemp = novoRegistro[0].temperatura
+                    var valorUmi = novoRegistro[0].umidade
+
+                    plotarMédiaAtualizada(ValorTemp, valorUmi)
+
+
+                    console.log(` O valor da Temperatura é: ${ValorTemp} e o valor da Umidade é: ${valorUmi} `);
+
 
                     obterdados(idAquario);
                     // alertar(novoRegistro, idAquario);
@@ -310,4 +491,17 @@
             });
 
     }
+
+
+    function plotarMédiaAtualizada(ValorTemp, valorUmi) {
+
+
+        var umidade = document.getElementById("NumeroCardDiáriaUmi")
+        var temperatura = document.getElementById("NumeroCardDiáriaTemp")
+
+        umidade.innerHTML = valorUmi;
+        temperatura.innerHTML = ValorTemp;
+
+    }
+
 </script>

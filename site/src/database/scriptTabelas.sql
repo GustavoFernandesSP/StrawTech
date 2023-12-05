@@ -35,45 +35,73 @@ create table plantacao (
 insert into plantacao values
 	(2, 1, 'estufa Boituva', 6);
 
-Select * FROM plantacao where fkEmpresa = 1;
+Select * FROM plantacao;
 
 
-create table endereco (
-	idEndereco int primary key auto_increment,
-	fkPlantacao int,
-    foreign key (fkPlantacao) references plantacao(idPlantacao),
-    cep char(8) not null,
-    uf varchar(30) not null,
-    cidade varchar(30) not null,
-    bairro varchar(30),
-    rua varchar(50) not null,
-    numero int
-);
+-- create table endereco (
+-- 	idEndereco int primary key auto_increment,
+-- 	fkPlantacao int,
+--     foreign key (fkPlantacao) references plantacao(idPlantacao),
+--     cep char(8) not null,
+--     uf varchar(30) not null,
+--     cidade varchar(30) not null,
+--     bairro varchar(30),
+--     rua varchar(50) not null,
+--     numero int
+-- );
 
-insert into endereco values
-	(null, 1, '21304932', 'SP', 'Sao Paulo', 'Cerqueira Cesar','Hadock Lobo', 595),
-	(null, 2, '89320492', 'RJ', 'Rio de Janeiro', 'Madureira','Avenida Brasil', 1000),
-	(null, 3, '64154647', 'SP', 'Sao Paulo', 'Cerqueira Cesar','Alameda Santos', 3445),
-	(null, 4, '54646819', 'SC', 'Santa Catarina', 'Joinville', 'Pitangas', 34);
+-- insert into endereco values
+-- 	(null, 1, '21304932', 'SP', 'Sao Paulo', 'Cerqueira Cesar','Hadock Lobo', 595),
+-- 	(null, 2, '89320492', 'RJ', 'Rio de Janeiro', 'Madureira','Avenida Brasil', 1000),
+-- 	(null, 3, '64154647', 'SP', 'Sao Paulo', 'Cerqueira Cesar','Alameda Santos', 3445),
+-- 	(null, 4, '54646819', 'SC', 'Santa Catarina', 'Joinville', 'Pitangas', 34);
 
 
-create table arduino (
-	idArduino int primary key auto_increment,
-	fkPlantacao int,
-	foreign key (fkPlantacao) references plantacao(idPlantacao),
-	dtInstalacao date
-    );
+-- create table arduino (
+-- 	idArduino int primary key auto_increment,
+-- 	fkPlantacao int,
+-- 	foreign key (fkPlantacao) references plantacao(idPlantacao),
+-- 	dtInstalacao date
+--     );
 
 
 create table registro (
 	idRegistro int primary key auto_increment,
-	fkArduino int,
-	foreign key (fkArduino) references arduino(idArduino),
+	fkPlantacao int,
+	foreign key (fkPlantacao) references plantacao(idPlantacao),
     lm35_temperatura decimal(4,2),
     dht11_umidade decimal(4,2),
-    dataHora timestamp default current_timestamp
+    dataHora DATETIME
 );
 
-insert into registro (lm35_temperatura, dht11_umidade) values
-(20.10, 20.10);
+SELECT * FROM registro;
 
+
+INSERT INTO registro (fkPlantacao, lm35_temperatura, dht11_umidade, dataHora)
+VALUES
+    (2, 25.5, 60.0, '2023-12-05 22:30:00');
+
+SELECT
+    lm35_temperatura AS temperatura,
+    dht11_umidade AS umidade,
+    dataHora AS momento,
+    DATE_FORMAT(dataHora, '%H:%i:%s') AS momento_grafico
+FROM registro
+WHERE fkPlantacao = 2
+ORDER BY idRegistro DESC
+LIMIT 7;
+
+select 
+        lm35_temperatura as temperatura, 
+        dht11_umidade as umidade,
+		DATE_FORMAT(dataHora,'%H:%i:%s') as momento_grafico, 
+		fkPlantacao 
+		from registro where fkPlantacao = 2
+                    order by idRegistro desc limit 1;
+
+select dht11_temperatura as temperatura, 
+	   dht11_umidade as umidade, dataHora,
+                        DATE_FORMAT(dataHora,'%H:%i:%s') as momento_grafico
+                    from registro
+                    where fk_plantacao = 1
+                    order by id desc limit 7;

@@ -276,3 +276,27 @@ canvas {
   width: 100% !important;
   height: 100% !important;
 }
+
+.btn-buscarPlantacao{
+  width: 12%;
+  height: 35px;
+  border-radius: 25px;
+  border: 1px solid black;
+  background-color: #e6005a;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-buscarPlantacao:hover{
+
+
+  background-color: white;
+  color: #e6005a;
+  font-weight: 800;
+
+}
+
+
+.graficossss{
+  width: 100%;
+}

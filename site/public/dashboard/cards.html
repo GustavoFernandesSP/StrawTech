@@ -52,12 +52,7 @@
             <div id="alerta">
             </div>
 
-            <div style="margin: auto; text-align: center">
-                <h1 style="color: black;">Seleciona uma plantação:</h1>
-                <select name="plantacoes" id="listaplatacoesUser">
-                    <option selected>Selecione uma plantação</option>
-                </select>
-            </div>
+
 
 
             <div class="regua">
@@ -95,6 +90,7 @@
 
 <script>
 
+
     function listarPlantacoes() {
 
         var idplantacao = sessionStorage.ID_USUARIO;
@@ -115,7 +111,6 @@
 
         console.log(sessionStorage.ID_USUARIO);
     }
-
 
     function exibirAquarios() {
         JSON.parse(sessionStorage.PLANTACOES).forEach(item => {
