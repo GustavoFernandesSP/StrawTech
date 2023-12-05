@@ -18,7 +18,7 @@ create table empresa(
 );
 
 insert into empresa (nome, representante, cnpj, CEP, cidade, bairro, rua, numero, email, senha) values
-	('Frizza Estufas', 'Fernando Souza', '29410462723323',  '05819030', 'São Paulo', 'Jardim santa josé fina', 'Rua foz do giraldo',  '96',  'estufa.frizzarini@sptech.school', 'Estuf@2023' );
+	('Group Fernandes', 'Gustavo Fernandes', '29410562723322',  '05819030', 'São Paulo', 'Jardim santa josé fina', 'Rua foz do giraldo',  '96',  'gustavo.fernandes@sptech.school', 'Gustavo.2004' );
 
 select * from empresa;
 
@@ -33,7 +33,7 @@ create table plantacao (
     );
     
 insert into plantacao values
-	(1, 1, 'Estufa baixa SP', 3);
+	(2, 1, 'estufa Boituva', 6);
 
 Select * FROM plantacao where fkEmpresa = 1;
 
