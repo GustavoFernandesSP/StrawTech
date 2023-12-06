@@ -155,8 +155,10 @@
             <br /><br />
 
 
-            <div class="btns-dash" id="btnAquario">
-                <!-- O gráfico é chamado de acordo com o id (fk_aquario) do banco  -->
+            <div class="btns-dash" id="graficosPlotarCanvas">
+
+
+
             </div>
             <div id="graficos">
             </div>
@@ -197,22 +199,19 @@
 
     function ChamarGraphc() {
 
-        var plantacoes = JSON.parse(sessionStorage.PLANTACOES);
-        plantacoes.forEach(item => {
-            document.getElementById("graficos").innerHTML += `
-                <div id="grafico${item.idPlantacao}" class="display-none">
-                    <h3 class="tituloGraficos">
-                        <span id="tituloAquario${item.idPlantacao}">${item.nome}</span>
-                    </h3>
-                    <div class="graph">
-                        <canvas id="myChartCanvas${item.idPlantacao}"></canvas>
-                    </div>
-                    <div class="label-captura">
-                        <p id="avisoCaptura${item.idPlantacao}" style="color: white"></p>
-                    </div>
-                </div>
-            `
-        })
+        var idGraficos = document.getElementById("graficosPlotarCanvas")
+
+        idGraficos.innerHTML = `<section style="width: 50%; margin: auto">
+                    <p class="graficos_umAoLadodoOutro">Sensor DHT 11 - Umidade</p>
+                    <canvas id="dht11Umidade"></canvas>
+                </section>
+                <br>
+
+                <section style="width: 50%; margin: auto">
+                    <p class="graficos_umAoLadodoOutro">Sensor LM 35 - Temperatura</p>
+                    <canvas id="lm35Temperatura"></canvas>
+                </section>`
+
         BuscarPlantacao()
     }
 
@@ -358,7 +357,7 @@
     // Esta função *plotarGrafico* usa os dados capturados na função anterior para criar o gráfico
     // Configura o gráfico (cores, tipo, etc), materializa-o na página e, 
     // A função *plotarGrafico* também invoca a função *atualizarGrafico*
-    function plotarGrafico(resposta, idAquario) {
+    function plotarGrafico(resposta, plantacaoASerbuscada) {
 
         console.log('iniciando plotagem do gráfico...');
 
@@ -408,15 +407,22 @@
         const config = {
             type: 'line',
             data: dados,
+            borderColor: ["#45b3e7"],
+            fill: false,
         };
 
         // Adicionando gráfico criado em div na tela
         let myChart = new Chart(
-            document.getElementById(`myChartCanvas${idAquario}`),
+            document.getElementById(`dht11Umidade`),
             config
         );
 
-        setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
+        let mychart2 = new Chart(
+            document.getElementById(`lm35Temperatura`),
+            config
+        );
+
+        setTimeout(() => atualizarGrafico(plantacaoASerbuscada, dados, myChart), 2000);
     }
 
 
@@ -444,20 +450,20 @@
                     console.log(` O valor da Temperatura é: ${ValorTemp} e o valor da Umidade é: ${valorUmi} `);
 
 
-                    obterdados(idAquario);
+                    // obterdados(idAquario);
                     // alertar(novoRegistro, idAquario);
                     console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
                     console.log(`Dados atuais do gráfico:`);
                     console.log(dados);
 
-                    let avisoCaptura = document.getElementById(`avisoCaptura${idAquario}`)
-                    avisoCaptura.innerHTML = ""
+                    // let avisoCaptura = document.getElementById(`avisoCaptura${idAquario}`)
+                    // avisoCaptura.innerHTML = ""
 
 
                     if (novoRegistro[0].momento_grafico == dados.labels[dados.labels.length - 1]) {
                         console.log("---------------------------------------------------------------")
                         console.log("Como não há dados novos para captura, o gráfico não atualizará.")
-                        avisoCaptura.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Foi trazido o dado mais atual capturado pelo sensor. <br> Como não há dados novos a exibir, o gráfico não atualizará."
+                        // avisoCaptura.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Foi trazido o dado mais atual capturado pelo sensor. <br> Como não há dados novos a exibir, o gráfico não atualizará."
                         console.log("Horário do novo dado capturado:")
                         console.log(novoRegistro[0].momento_grafico)
                         console.log("Horário do último dado capturado:")

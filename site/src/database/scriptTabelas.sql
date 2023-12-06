@@ -79,7 +79,7 @@ SELECT * FROM registro;
 
 INSERT INTO registro (fkPlantacao, lm35_temperatura, dht11_umidade, dataHora)
 VALUES
-    (2, 25.5, 60.0, '2023-12-05 22:30:00');
+    (2, 30.5, 50.0, '2023-12-05 24:30:00');
 
 SELECT
     lm35_temperatura AS temperatura,
