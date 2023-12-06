@@ -300,3 +300,42 @@ canvas {
 .graficossss{
   width: 100%;
 }
+
+.AdicionarPlantação{
+  margin: auto; 
+  display: block;
+  text-align: center;
+  margin-top: 25px;
+  width: 150px;
+}
+
+.buttonCadastroPlantacao{
+  width: 150px;
+  height: 50px;
+  border-radius: 25px;
+  border: 1px solid black;
+  background-color: #e6005a;
+  color: white;
+  font-weight: 600;
+}
+
+.buttonCadastroPlantacao:hover{
+  background-color: white;
+  color: #e6005a;
+  font-weight: 800;
+}
+
+.AdicionarPlantacaoAberto{
+  display: none;
+  border-radius: 25px;
+  background-color: #e6005a;
+  width: 50%;
+  margin: auto;
+}
+
+.inputs{
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+}
+

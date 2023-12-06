@@ -18,22 +18,29 @@ create table empresa(
 );
 
 insert into empresa (nome, representante, cnpj, CEP, cidade, bairro, rua, numero, email, senha) values
-	('Group Fernandes', 'Gustavo Fernandes', '29410562723322',  '05819030', 'São Paulo', 'Jardim santa josé fina', 'Rua foz do giraldo',  '96',  'gustavo.fernandes@sptech.school', 'Gustavo.2004' );
+	('Group Frizaa', 'Frizza', '29410562723333',  '05819030', 'São Paulo', 'Jardim santa josé fina', 'Rua foz do giraldo',  '96',  'friza@sptech.school', 'Frizza' );
 
 select * from empresa;
 
 
 create table plantacao (
-	idPlantacao int,
+	idPlantacao int auto_increment,
 	fkEmpresa int,
 	foreign key (fkEmpresa) references empresa(idEmpresa),
-    nome varchar(20),
+    nome varchar(50),
     qtdArduino int,
     primary key (idPlantacao, fkEmpresa)
     );
+
     
 insert into plantacao values
 	(2, 1, 'estufa Boituva', 6);
+
+insert into plantacao values (null, 2, Plantação Atibaia, 8);
+
+INSERT INTO plantacao (idPlantacao, fkEmpresa, nome, qtdArduino) VALUES (null, 2, 'awd', 8);
+
+INSERT INTO plantacao (fkEmpresa, nome, qtdArduino) VALUES (2, 'Minha Plantacao', 5);
 
 Select * FROM plantacao;
 
@@ -79,7 +86,7 @@ SELECT * FROM registro;
 
 INSERT INTO registro (fkPlantacao, lm35_temperatura, dht11_umidade, dataHora)
 VALUES
-    (2, 30.5, 50.0, '2023-12-05 24:30:00');
+    (2, 35.5, 48.0, '2023-12-05 0:30:00');
 
 SELECT
     lm35_temperatura AS temperatura,

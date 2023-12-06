@@ -112,23 +112,23 @@
                 <div class="regua">
                     <div class="item-regua perigo-frio">
                         <h4>Perigo</h4>
-                        <h2>&lt;=5°C</h2>
+                        <h2>&lt;=50°C</h2>
                     </div>
                     <div class="item-regua alerta-frio">
                         <h4>Alerta</h4>
-                        <h2>&lt;=10°C</h2>
+                        <h2>&lt;=60°C</h2>
                     </div>
                     <div class="item-regua ideal">
                         <h4>Ideal</h4>
-                        <h2>20°C</h2>
+                        <h2>70°C</h2>
                     </div>
                     <div class="item-regua alerta-quente">
                         <h4>Alerta</h4>
-                        <h2>&gt;=22°C</h2>
+                        <h2>&gt;=80°C</h2>
                     </div>
                     <div class="item-regua perigo-quente">
                         <h4>Perigo</h4>
-                        <h2>&gt;=23°C</h2>
+                        <h2>&gt;=90°C</h2>
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@
 
             <div class="DivDashBoardCard">
                 <br>
-                <h3>Média Diária</h3>
+                <h3>Temperaturas Atuais</h3>
                 <br>
 
                 <div class="FlexBox alintExCenter">
@@ -317,46 +317,6 @@
         btnExibir.classList.add("btn-pink")
     }
 
-    // O gráfico é construído com três funções:
-    // 1. obterDadosGrafico -> Traz dados do Banco de Dados para montar o gráfico da primeira vez
-    // 2. plotarGrafico -> Monta o gráfico com os dados trazidos e exibe em tela
-    // 3. atualizarGrafico -> Atualiza o gráfico, trazendo novamente dados do Banco
-
-    // Esta função *obterDadosGrafico* busca os últimos dados inseridos em tabela de medidas.
-    // para, quando carregar o gráfico da primeira vez, já trazer com vários dados.
-    // A função *obterDadosGrafico* também invoca a função *plotarGrafico*
-
-    //     Se quiser alterar a busca, ajuste as regras de negócio em src/controllers
-    //     Para ajustar o "select", ajuste o comando sql em src/models
-    // function obterDadosGrafico(idAquario) {
-
-    //     alterarTitulo(idAquario)
-
-    //     if (proximaAtualizacao != undefined) {
-    //         clearTimeout(proximaAtualizacao);
-    //     }
-
-    //     fetch(`/medidas/ultimas/${idAquario}`, { cache: 'no-store' }).then(function (response) {
-    //         if (response.ok) {
-    //             response.json().then(function (resposta) {
-    //                 console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-    //                 resposta.reverse();
-
-    //                 plotarGrafico(resposta, idAquario);
-
-    //             });
-    //         } else {
-    //             console.error('Nenhum dado encontrado ou erro na API');
-    //         }
-    //     })
-    //         .catch(function (error) {
-    //             console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-    //         });
-    // }
-
-    // Esta função *plotarGrafico* usa os dados capturados na função anterior para criar o gráfico
-    // Configura o gráfico (cores, tipo, etc), materializa-o na página e, 
-    // A função *plotarGrafico* também invoca a função *atualizarGrafico*
     function plotarGrafico(resposta, plantacaoASerbuscada) {
 
         console.log('iniciando plotagem do gráfico...');
@@ -373,8 +333,12 @@
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
-            },
-            {
+            }]
+        };
+
+        let dados2 = {
+            labels: labels,
+            datasets: [{
                 label: 'Temperatura',
                 data: [],
                 fill: false,
@@ -388,11 +352,11 @@
         console.log(resposta)
 
         // Inserindo valores recebidos em estrutura para plotar o gráfico
-        for (i = 0; i < resposta.length; i++) {
+        for (let i = 0; i < resposta.length; i++) {
             var registro = resposta[i];
             labels.push(registro.momento_grafico);
             dados.datasets[0].data.push(registro.umidade);
-            dados.datasets[1].data.push(registro.temperatura);
+            dados2.datasets[0].data.push(registro.temperatura);
         }
 
         console.log('----------------------------------------------')
@@ -407,9 +371,27 @@
         const config = {
             type: 'line',
             data: dados,
-            borderColor: ["#45b3e7"],
-            fill: false,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
         };
+
+        const config2 = {
+            type: 'line',
+            data: dados2,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
 
         // Adicionando gráfico criado em div na tela
         let myChart = new Chart(
@@ -419,10 +401,10 @@
 
         let mychart2 = new Chart(
             document.getElementById(`lm35Temperatura`),
-            config
+            config2
         );
 
-        setTimeout(() => atualizarGrafico(plantacaoASerbuscada, dados, myChart), 2000);
+        setTimeout(() => atualizarGrafico(plantacaoASerbuscada, dados, myChart, mychart2), 2000);
     }
 
 
@@ -507,6 +489,20 @@
 
         umidade.innerHTML = valorUmi;
         temperatura.innerHTML = ValorTemp;
+
+
+        if (valorUmi <= 50) {
+            umidade.style.backgroundColor = '#5C6BC0'
+        } else if (valorUmi <= 60) {
+            umidade.style.backgroundColor = '#42A5F5'
+        } else if (valorUmi <= 81) {
+            umidade.style.backgroundColor = '#9CCC65'
+        } else if (valorUmi <= 80) {
+            umidade.style.backgroundColor = '#FFEE58'
+        } else if (valorUmi > 90) {
+            umidade.style.backgroundColor = '#FF7043'
+        }
+
 
     }
 
