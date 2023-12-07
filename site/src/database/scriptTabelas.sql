@@ -32,36 +32,64 @@ create table plantacao (
     primary key (idPlantacao, fkEmpresa)
     );
 
+
+
+-- SELECT
+--     plantacao.nome AS NomePlantacao,
+--     plantacao.qtdArduino AS QtdArduino,
+--     empresa.nome AS NomeEmpresa
+-- FROM
+--     plantacao
+-- JOIN
+--     empresa ON plantacao.fkEmpresa = empresa.idEmpresa;
+--     
+    
+    
+    
     
 insert into plantacao values
-	(2, 1, 'estufa Boituva', 6);
+	(null, 1, 'estufa Ibiuna', 15);
 
-insert into plantacao values (null, 2, Plantação Atibaia, 8);
-
-INSERT INTO plantacao (idPlantacao, fkEmpresa, nome, qtdArduino) VALUES (null, 2, 'awd', 8);
 
 INSERT INTO plantacao (fkEmpresa, nome, qtdArduino) VALUES (2, 'Minha Plantacao', 5);
 
 Select * FROM plantacao;
 
 
--- create table endereco (
--- 	idEndereco int primary key auto_increment,
--- 	fkPlantacao int,
---     foreign key (fkPlantacao) references plantacao(idPlantacao),
---     cep char(8) not null,
---     uf varchar(30) not null,
---     cidade varchar(30) not null,
---     bairro varchar(30),
---     rua varchar(50) not null,
---     numero int
--- );
+create table endereco (
+	idEndereco int primary key auto_increment,
+	fkPlantacao int,
+    foreign key (fkPlantacao) references plantacao(idPlantacao),
+    cep char(8) not null,
+    uf varchar(30) not null,
+    cidade varchar(30) not null,
+    bairro varchar(30),
+    rua varchar(50) not null,
+    numero int
+);
 
--- insert into endereco values
--- 	(null, 1, '21304932', 'SP', 'Sao Paulo', 'Cerqueira Cesar','Hadock Lobo', 595),
--- 	(null, 2, '89320492', 'RJ', 'Rio de Janeiro', 'Madureira','Avenida Brasil', 1000),
--- 	(null, 3, '64154647', 'SP', 'Sao Paulo', 'Cerqueira Cesar','Alameda Santos', 3445),
--- 	(null, 4, '54646819', 'SC', 'Santa Catarina', 'Joinville', 'Pitangas', 34);
+insert into endereco values
+	(null, 4, '21304932', 'SP', 'Ibiuna', 'Cerqueira Cesar','Rua foz do giraldo', 595);
+
+-- SELECT * FROM endereco JOIN
+--     plantacao ON endereco.fkPlantacao = plantacao.idPlantacao;
+
+
+
+
+SELECT
+    endereco.bairro AS Bairro,
+    endereco.cidade AS Cidade,
+    plantacao.nome AS NomePlantacao,
+    endereco.rua AS Rua,
+     endereco.numero AS Numero
+FROM
+    endereco
+JOIN
+    plantacao ON endereco.fkPlantacao = plantacao.idPlantacao
+WHERE
+    plantacao.fkEmpresa = 1;
+
 
 
 -- create table arduino (
@@ -78,15 +106,14 @@ create table registro (
 	foreign key (fkPlantacao) references plantacao(idPlantacao),
     lm35_temperatura decimal(4,2),
     dht11_umidade decimal(4,2),
-    dataHora DATETIME
+    dataHora DATETIME  DEFAULT current_timestamp 
 );
 
 SELECT * FROM registro;
 
-
-INSERT INTO registro (fkPlantacao, lm35_temperatura, dht11_umidade, dataHora)
+INSERT INTO registro (fkPlantacao, lm35_temperatura, dht11_umidade)
 VALUES
-    (2, 35.5, 48.0, '2023-12-05 0:30:00');
+    (2, 22, 70.0);
 
 SELECT
     lm35_temperatura AS temperatura,
